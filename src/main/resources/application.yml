@@ -2,7 +2,7 @@ spring:
   application:
     name: record-manager-statistics-server
   profiles:
-    active: ${SPRING_ACTIVE_PROFILE:prod}
+    active: ${SPRING_ACTIVE_PROFILE:demo}
 
 server:
   port: ${SERVER_PORT:8080}
