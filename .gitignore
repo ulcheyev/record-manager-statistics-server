@@ -30,3 +30,6 @@ replay_pid*
 # Envs
 .env
 .env.local
+
+# MacOS related
+.DS_Store
