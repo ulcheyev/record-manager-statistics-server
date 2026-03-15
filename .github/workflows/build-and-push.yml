@@ -35,4 +35,4 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ secrets.DOCKERHUB_USER }}/media-asset-annotator-server:latest
+            ${{ secrets.DOCKERHUB_USER }}/record-manager-statistics-server:latest
