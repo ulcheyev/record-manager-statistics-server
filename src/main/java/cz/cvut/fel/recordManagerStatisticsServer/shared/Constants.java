@@ -16,6 +16,5 @@ public final class Constants {
 
         public static final String V1      = "/api/v1";
         public static final String RECORDS = "/records";
-        public static final String STATS   = "/stats";
     }
 }

@@ -16,7 +16,7 @@ public class RecordStatisticsController {
 
     private final RecordStatisticsService service;
 
-    @GetMapping(Constants.Api.STATS)
+    @GetMapping
     public ResponseEntity<RecordStatsDto> getRecordStats() {
         return ResponseEntity.ok(service.getRecordStats());
     }
