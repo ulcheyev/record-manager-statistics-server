@@ -134,7 +134,6 @@ class GeneralRecordStatisticsServiceTest {
                 .series(Map.of("open", List.of(2L), "completed", List.of(2L), "rejected", List.of(1L)))
                 .totals(List.of(5L))
                 .granularity(Granularity.MONTH)
-                .interval(interval)
                 .build();
 
         when(repository.findAllByInterval(interval)).thenReturn(records);
