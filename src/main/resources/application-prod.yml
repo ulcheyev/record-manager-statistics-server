@@ -1,12 +1,14 @@
-record-manager:
-  internal-url: ${RECORD_MANAGER_INTERNAL_URL:http://record-manager-server:8080}
-  context-path: ${RECORD_MANAGER_CONTEXT_PATH:/record-manager-server}
-  endpoints:
-    current-user: ${RECORD_MANAGER_CURRENT_USER_ENDPOINT:/users/current}
-
 persistence:
-  username: ${DB_USERNAME:admin}
-  password: ${DB_PASSWORD:root}
+  username: ${DB_USERNAME:}
+  password: ${DB_PASSWORD:}
   repository:
     url: ${REPOSITORY_URL:http://localhost:7200/repositories/record-manager-app}
   driver: cz.cvut.kbss.ontodriver.rdf4j.Rdf4jDataSource
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI}
+          jwk-set-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI}

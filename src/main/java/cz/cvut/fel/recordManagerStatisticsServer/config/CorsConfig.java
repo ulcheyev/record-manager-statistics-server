@@ -1,13 +1,19 @@
 package cz.cvut.fel.recordManagerStatisticsServer.config;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
 @Configuration
+@Getter
 public class CorsConfig implements WebMvcConfigurer {
 
     @Value("${cors.enabled:true}")
@@ -44,5 +50,20 @@ public class CorsConfig implements WebMvcConfigurer {
                 .exposedHeaders(exposedHeaders.toArray(String[]::new))
                 .allowCredentials(allowCredentials)
                 .maxAge(maxAge);
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(allowedOrigins);
+        configuration.setAllowedMethods(allowedMethods);
+        configuration.setAllowedHeaders(allowedHeaders);
+        configuration.setExposedHeaders(exposedHeaders);
+        configuration.setAllowCredentials(allowCredentials);
+        configuration.setMaxAge(maxAge);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

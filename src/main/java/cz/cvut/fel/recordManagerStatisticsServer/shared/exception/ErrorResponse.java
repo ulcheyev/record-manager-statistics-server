@@ -1,4 +1,4 @@
-package cz.cvut.fel.recordManagerStatisticsServer.dto;
+package cz.cvut.fel.recordManagerStatisticsServer.shared.exception;
 
 import lombok.Builder;
 import lombok.Data;

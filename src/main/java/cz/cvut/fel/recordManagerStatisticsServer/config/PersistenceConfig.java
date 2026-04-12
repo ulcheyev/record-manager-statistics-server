@@ -54,7 +54,7 @@ public class PersistenceConfig {
     @PostConstruct
     public void init() {
         final Map<String, String> properties = new HashMap<>();
-        properties.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.fel.annotator");
+        properties.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.fel.recordManagerStatisticsServer.repository.model");
         properties.put(JOPAPersistenceProperties.JPA_PERSISTENCE_PROVIDER, JOPAPersistenceProvider.class.getName());
         properties.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, this.repositoryUrl);
         properties.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS, this.driver);

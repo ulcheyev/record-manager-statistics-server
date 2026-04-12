@@ -20,7 +20,7 @@ jobs:
           cache: maven
 
       - name: Build jar
-        run: mvn -B clean package -DskipTests
+        run: mvn -B clean package
 
       - uses: docker/setup-buildx-action@v3
 

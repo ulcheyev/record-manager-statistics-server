@@ -1,6 +1,6 @@
 package cz.cvut.fel.recordManagerStatisticsServer.shared.exception.handler;
 
-import cz.cvut.fel.recordManagerStatisticsServer.dto.ErrorResponse;
+import cz.cvut.fel.recordManagerStatisticsServer.shared.exception.ErrorResponse;
 import cz.cvut.fel.recordManagerStatisticsServer.shared.exception.StatisticsException;
 import cz.cvut.fel.recordManagerStatisticsServer.shared.exception.StatisticsNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,19 +40,28 @@ public class GlobalExceptionHandler {
             HttpServletRequest request
     ) {
         log.error("Unexpected error: {}", ex.getMessage(), ex);
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, ex, request);
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", request);
     }
+
 
     private ResponseEntity<ErrorResponse> build(
             HttpStatus status,
             Exception ex,
             HttpServletRequest request
     ) {
+        return build(status, ex.getMessage(), request);
+    }
+
+    private ResponseEntity<ErrorResponse> build(
+            HttpStatus status,
+            String message,
+            HttpServletRequest request
+    ) {
         return ResponseEntity.status(status).body(
                 ErrorResponse.builder()
                         .status(status.value())
                         .error(status.getReasonPhrase())
-                        .message(ex.getMessage())
+                        .message(message)
                         .path(request.getRequestURI())
                         .timestamp(Instant.now())
                         .build()
