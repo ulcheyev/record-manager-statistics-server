@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class RecordManagerStatisticsServerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(RecordManagerStatisticsServerApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(RecordManagerStatisticsServerApplication.class, args);
+    }
 
 }
