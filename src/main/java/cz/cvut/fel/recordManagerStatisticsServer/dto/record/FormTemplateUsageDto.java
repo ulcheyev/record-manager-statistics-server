@@ -18,6 +18,7 @@ public class FormTemplateUsageDto {
     @Builder
     public static class TemplateSliceDto {
         private String templateUri;
+        private String templateLabel;
         private long count;
         private double percentage;
     }

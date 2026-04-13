@@ -2,7 +2,9 @@ persistence:
   username: ${DB_USERNAME:}
   password: ${DB_PASSWORD:}
   repository:
-    url: ${REPOSITORY_URL:http://localhost:7200/repositories/record-manager-app}
+    url: ${RM_REPOSITORY_URL:http://localhost:7200/repositories/record-manager-app}
+  formgen:
+    url: ${FORMGEN_REPOSITORY_URL:http://localhost:7200/repositories/record-manager-formgen}
   driver: cz.cvut.kbss.ontodriver.rdf4j.Rdf4jDataSource
 
 spring:

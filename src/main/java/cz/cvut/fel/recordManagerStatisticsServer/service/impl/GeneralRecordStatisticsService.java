@@ -6,6 +6,7 @@ import cz.cvut.fel.recordManagerStatisticsServer.dto.PhaseCountDto;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.StatisticsInterval;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.record.*;
 import cz.cvut.fel.recordManagerStatisticsServer.model.RMUser;
+import cz.cvut.fel.recordManagerStatisticsServer.repository.FormTemplateRepository;
 import cz.cvut.fel.recordManagerStatisticsServer.repository.RecordStatisticsRepository;
 import cz.cvut.fel.recordManagerStatisticsServer.repository.model.Institution;
 import cz.cvut.fel.recordManagerStatisticsServer.repository.model.RMRecord;
@@ -21,6 +22,7 @@ import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 public class GeneralRecordStatisticsService implements RecordStatisticsService {
 
     private final RecordStatisticsRepository repository;
+    private final FormTemplateRepository formTemplateRepository;
     private final RequestUserContext userContext;
     private final RecordAggregator aggregator;
     private final TimeSeriesBuilder timeSeriesBuilder;
@@ -133,11 +136,30 @@ public class GeneralRecordStatisticsService implements RecordStatisticsService {
 
         List<RMRecord> records = repository.findAllByInterval(interval);
 
-        Map<String, Long> byTemplate = aggregator.groupByFormTemplate(records);
+        Map<String, Long> byTemplate = records.stream()
+                .filter(r -> r.getFormTemplate() != null)
+                .collect(Collectors.groupingBy(
+                        RMRecord::getFormTemplate, Collectors.counting()));
+
         long total = byTemplate.values().stream().mapToLong(Long::longValue).sum();
 
+        Set<URI> templateUris = byTemplate.keySet().stream()
+                .map(URI::create)
+                .collect(Collectors.toSet());
+
+        Map<URI, String> labels = formTemplateRepository.findLabelsByUris(templateUris);
+
         List<FormTemplateUsageDto.TemplateSliceDto> templates = byTemplate.entrySet().stream()
-                .map(e -> toTemplateSlice(e.getKey(), e.getValue(), total))
+                .map(e -> {
+                    URI uri   = URI.create(e.getKey());
+                    long count = e.getValue();
+                    return FormTemplateUsageDto.TemplateSliceDto.builder()
+                            .templateUri(e.getKey())
+                            .templateLabel(labels.getOrDefault(uri, e.getKey()))
+                            .count(count)
+                            .percentage(safeDivide(count, total) * 100)
+                            .build();
+                })
                 .sorted(Comparator.comparingLong(
                         FormTemplateUsageDto.TemplateSliceDto::getCount).reversed())
                 .collect(Collectors.toList());
