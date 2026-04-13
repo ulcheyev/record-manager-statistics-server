@@ -7,6 +7,7 @@ import cz.cvut.fel.recordManagerStatisticsServer.dto.StatisticsInterval;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.TimeSeriesDto;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.record.*;
 import cz.cvut.fel.recordManagerStatisticsServer.mock.RecordTestFixtures;
+import cz.cvut.fel.recordManagerStatisticsServer.repository.FormTemplateRepository;
 import cz.cvut.fel.recordManagerStatisticsServer.repository.RecordStatisticsRepository;
 import cz.cvut.fel.recordManagerStatisticsServer.repository.model.RMRecord;
 import cz.cvut.fel.recordManagerStatisticsServer.repository.model.RecordPhase;
@@ -26,7 +27,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cz.cvut.fel.recordManagerStatisticsServer.mock.RecordTestFixtures.recordWithTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.offset;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -37,6 +40,9 @@ class GeneralRecordStatisticsServiceTest {
 
     @Mock
     private RecordStatisticsRepository repository;
+
+    @Mock
+    private FormTemplateRepository formTemplateRepository;
 
     @Mock
     private RequestUserContext userContext;
@@ -188,32 +194,50 @@ class GeneralRecordStatisticsServiceTest {
 
     @Test
     void getByFormTemplate_calculatesPercentagesCorrectly() {
-        when(repository.findAllByInterval(interval)).thenReturn(records);
-        when(aggregator.groupByFormTemplate(records))
-                .thenReturn(Map.of("form-a", 3L, "form-b", 2L));
+        // arrange
+        String uri1 = "http://example.org/form/1";
+        String uri2 = "http://example.org/form/2";
 
-        FormTemplateUsageDto result = service.getByFormTemplate(interval);
+        RMRecord r1 = recordWithTemplate(uri1);
+        RMRecord r2 = recordWithTemplate(uri1);
+        RMRecord r3 = recordWithTemplate(uri2);
 
-        assertThat(result.getTotal()).isEqualTo(5);
+        when(repository.findAllByInterval(any())).thenReturn(List.of(r1, r2, r3));
+        when(formTemplateRepository.findLabelsByUris(any()))
+                .thenReturn(Map.of(
+                        URI.create(uri1), "Form One",
+                        URI.create(uri2), "Form Two"
+                ));
+
+        // act
+        FormTemplateUsageDto result = service.getByFormTemplate(new StatisticsInterval());
+
+        // assert
+        assertThat(result.getTotal()).isEqualTo(3);
         assertThat(result.getTemplates()).hasSize(2);
-
-        FormTemplateUsageDto.TemplateSliceDto formA = result.getTemplates().stream()
-                .filter(t -> t.getTemplateUri().equals("form-a"))
-                .findFirst().orElseThrow();
-
-        assertThat(formA.getPercentage()).isCloseTo(60.0,
-                org.assertj.core.data.Offset.offset(0.01));
+        assertThat(result.getTemplates().get(0).getPercentage())
+                .isCloseTo(66.67, offset(0.01));
     }
 
     @Test
     void getByFormTemplate_sortsByCountDescending() {
-        when(repository.findAllByInterval(interval)).thenReturn(records);
-        when(aggregator.groupByFormTemplate(records))
-                .thenReturn(Map.of("form-a", 3L, "form-b", 2L));
+        String uri1 = "http://example.org/form/1";
+        String uri2 = "http://example.org/form/2";
 
-        FormTemplateUsageDto result = service.getByFormTemplate(interval);
+        when(repository.findAllByInterval(any())).thenReturn(List.of(
+                recordWithTemplate(uri1),
+                recordWithTemplate(uri1),
+                recordWithTemplate(uri2)
+        ));
+        when(formTemplateRepository.findLabelsByUris(any()))
+                .thenReturn(Map.of(
+                        URI.create(uri1), "Form One",
+                        URI.create(uri2), "Form Two"
+                ));
 
-        assertThat(result.getTemplates().get(0).getCount())
-                .isGreaterThanOrEqualTo(result.getTemplates().get(1).getCount());
+        FormTemplateUsageDto result = service.getByFormTemplate(new StatisticsInterval());
+
+        assertThat(result.getTemplates().get(0).getCount()).isGreaterThan(
+                result.getTemplates().get(1).getCount());
     }
 }
