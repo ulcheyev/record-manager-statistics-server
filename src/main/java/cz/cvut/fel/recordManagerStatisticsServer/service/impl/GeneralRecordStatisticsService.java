@@ -151,7 +151,7 @@ public class GeneralRecordStatisticsService implements RecordStatisticsService {
 
         List<FormTemplateUsageDto.TemplateSliceDto> templates = byTemplate.entrySet().stream()
                 .map(e -> {
-                    URI uri   = URI.create(e.getKey());
+                    URI uri = URI.create(e.getKey());
                     long count = e.getValue();
                     return FormTemplateUsageDto.TemplateSliceDto.builder()
                             .templateUri(e.getKey())

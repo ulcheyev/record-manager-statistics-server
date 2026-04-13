@@ -20,6 +20,7 @@ public final class RecordTestFixtures {
             URI.create(Vocabulary.USER_NAMESPACE + "/author-1");
     public static final URI AUTHOR_URI_2 =
             URI.create(Vocabulary.USER_NAMESPACE + "/author-2");
+
     private RecordTestFixtures() {
     }
 

@@ -47,7 +47,7 @@ public class PersistenceConfig {
 
     @PostConstruct
     public void init() {
-        this.emf        = createEntityManagerFactory("emf",        repositoryUrl);
+        this.emf = createEntityManagerFactory("emf", repositoryUrl);
         this.formgenEmf = createEntityManagerFactory("formgenEmf", formgenRepositoryUrl);
     }
 
