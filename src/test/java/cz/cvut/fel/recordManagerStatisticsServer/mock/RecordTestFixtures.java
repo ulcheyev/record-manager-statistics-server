@@ -73,4 +73,12 @@ public final class RecordTestFixtures {
                         author1, inst1, "form-a", new Date(1_700_400_000_000L))
         );
     }
+
+    public static RMRecord recordWithTemplate(String templateUri) {
+        RMRecord record = new RMRecord();
+        record.setUri(URI.create("http://record/template-" + templateUri.hashCode()));
+        record.setPhase(RecordPhase.OPEN);
+        record.setFormTemplate(templateUri);
+        return record;
+    }
 }
