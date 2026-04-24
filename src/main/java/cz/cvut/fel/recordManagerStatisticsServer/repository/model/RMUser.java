@@ -1,8 +1,6 @@
-package cz.cvut.fel.recordManagerStatisticsServer.model;
+package cz.cvut.fel.recordManagerStatisticsServer.repository.model;
 
 import cz.cvut.fel.recordManagerStatisticsServer.repository.Vocabulary;
-import cz.cvut.fel.recordManagerStatisticsServer.repository.model.AbstractEntity;
-import cz.cvut.fel.recordManagerStatisticsServer.repository.model.Institution;
 import cz.cvut.kbss.jopa.model.annotations.FetchType;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
@@ -31,6 +29,11 @@ public class RMUser extends AbstractEntity {
     private Institution institution;
 
     public String getFullName() {
-        return firstName + " " + lastName;
+        String first = firstName != null ? firstName : "";
+        String last = lastName != null ? lastName : "";
+        String full = (first + " " + last).trim();
+        return full.isEmpty() ? "" : full;
     }
+
+
 }

@@ -33,7 +33,7 @@ public class DemoSecurityConfig {
                 .username("demo")
                 .password("demo")
                 .roles(
-                        SecurityConstants.READ_STATISTICS
+                        SecurityConstants.ROLE_READ_STATISTICS
                 )
                 .build();
         return new InMemoryUserDetailsManager(demo);

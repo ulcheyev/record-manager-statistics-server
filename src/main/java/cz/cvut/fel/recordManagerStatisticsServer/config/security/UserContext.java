@@ -10,10 +10,16 @@ import java.net.URI;
 public class UserContext {
 
     private final URI userUri;
+    private final String username;
     private final String fullName;
-    private final boolean canReadStatistics;
+    private final URI institutionUri;
+    private final String institutionName;
 
-    public boolean hasStatisticsAccess() {
-        return canReadStatistics;
-    }
+    private final boolean canReadAllRecords;
+    private final boolean canReadOrgRecords;
+    private final boolean canReadAllUsers;
+    private final boolean canReadOrgUsers;
+    private final boolean canReadAllOrganizations;
+    private final boolean canReadOrganization;
+    private final boolean canReadStatistics;
 }

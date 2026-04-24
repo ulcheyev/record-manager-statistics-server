@@ -16,7 +16,7 @@ public class RMRecord extends AbstractEntity {
     private String key;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_author, fetch = FetchType.EAGER)
-    private cz.cvut.fel.recordManagerStatisticsServer.model.RMUser author;
+    private RMUser author;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_was_treated_at, fetch = FetchType.EAGER)
     private Institution institution;

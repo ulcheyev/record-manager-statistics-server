@@ -11,6 +11,14 @@ public final class FormTemplateQuery {
                     "<%s> <http://www.w3.org/2000/01/rdf-schema#label> ?label . " +
                     "} } LIMIT 1";
 
+    public static final String FIND_CORRECT_ANSWERS = """
+            SELECT ?qo ?correctUri ?correctLabel WHERE {
+                ?q <%s> ?qo ;
+                   <%s> ?correctUri .
+                OPTIONAL { ?correctUri <http://www.w3.org/2000/01/rdf-schema#label> ?correctLabel . }
+            }
+            """;
+
     private FormTemplateQuery() {
     }
 }
