@@ -4,13 +4,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum StatisticsLabel {
 
-    PERSONAL_OVERVIEW("Personal statistics"),
+    PERSONAL_OVERVIEW("Overview of personal statistics"),
     INSTITUTION_OVERVIEW("Statistics for your institution"),
     SYSTEM_OVERVIEW("System-wide statistics"),
-
-    PERSONAL_TIMELINE("My submissions over time"),
-    INSTITUTION_TIMELINE("Institution submissions over time"),
-    SYSTEM_TIMELINE("System submissions over time"),
     SYSTEM_INSTITUTIONS_OVERVIEW("Institutions across the system"),
 
     INSTITUTION_AUTHORS_OVERVIEW("Authors in your institution"),
@@ -21,7 +17,7 @@ public enum StatisticsLabel {
     PERSONAL_RECORDS_OVERVIEW("My records overview"),
     INSTITUTION_RECORDS_OVERVIEW("Records in your institution"),
     SYSTEM_RECORDS_OVERVIEW("Records across the system"),
-    PERSONAL_RECORDS_LIST("My records"),
+    PERSONAL_RECORDS_LIST("My records list"),
     INSTITUTION_RECORDS_LIST("Records in your institution"),
     SYSTEM_RECORDS_LIST("All records in the system"),
 

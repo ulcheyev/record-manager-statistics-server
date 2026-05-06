@@ -1,6 +1,6 @@
 package cz.cvut.fel.recordManagerStatisticsServer.service.impl.institutions;
 
-import cz.cvut.fel.recordManagerStatisticsServer.dto.AnswerCounts;
+import cz.cvut.fel.recordManagerStatisticsServer.repository.model.AnswerCounts;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.StatisticsInterval;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.StatisticsLabel;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.institutions.InstitutionSummaryDto;

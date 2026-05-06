@@ -1,6 +1,6 @@
 package cz.cvut.fel.recordManagerStatisticsServer.service.impl.authors;
 
-import cz.cvut.fel.recordManagerStatisticsServer.dto.AnswerCounts;
+import cz.cvut.fel.recordManagerStatisticsServer.repository.model.AnswerCounts;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.PhaseCountDto;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.StatisticsInterval;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.StatisticsLabel;
@@ -38,6 +38,7 @@ public class AuthorDtoBuilder {
         Instant periodFrom = recordFilter.earliestCreated(records);
         Instant periodTo = recordFilter.latestCreated(records);
 
+
         return AuthorWithInstitutionDto.builder()
                 .username(user.getAccountName())
                 .fullName(user.getFullName())
@@ -47,10 +48,8 @@ public class AuthorDtoBuilder {
                 .totalRecords(records.size())
                 .completionRate(byPhase.completionRate())
                 .rejectionRate(byPhase.rejectionRate())
-                .totalAnswers(answerCounts.totalAnswers())
-                .evaluableAnswers(answerCounts.evaluableAnswers())
-                .totalCorrectAnswers(answerCounts.correctAnswers())
-                .correctnessRate(answerCounts.correctnessRate())
+                .questions(answerCounts.toQuestionsDto())
+                .answers(answerCounts.toAnswersDto())
                 .byPhase(byPhase)
                 .periodFrom(periodFrom)
                 .periodTo(periodTo)

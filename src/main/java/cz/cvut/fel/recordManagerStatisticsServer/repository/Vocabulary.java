@@ -21,6 +21,7 @@ public final class Vocabulary {
     // -------------------------
     // Classes
     // -------------------------
+    public static final String s_c_patient_record = RM + "patient-record";
     public static final String s_c_record = RM + "record";
     public static final String s_c_institution = RM + "institution";
     // Record phases

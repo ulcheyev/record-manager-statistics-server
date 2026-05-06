@@ -1,7 +1,7 @@
 package cz.cvut.fel.recordManagerStatisticsServer.service.impl.authors;
 
 import cz.cvut.fel.recordManagerStatisticsServer.config.security.RequestUserContext;
-import cz.cvut.fel.recordManagerStatisticsServer.dto.AnswerCounts;
+import cz.cvut.fel.recordManagerStatisticsServer.repository.model.AnswerCounts;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.StatisticsInterval;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.StatisticsLabel;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.authors.*;
@@ -138,7 +138,7 @@ public class DefaultAuthorsStatisticsService implements AuthorsStatisticsService
                             author.getUri(), AnswerCounts.empty(author.getUri()));
                     return authorBuilder.build(author, grouped, counts, label, interval);
                 })
-                .sorted(Comparator.comparingLong(AuthorWithInstitutionDto::getTotalAnswers).reversed())
+                .sorted(Comparator.comparingLong(AuthorWithInstitutionDto::getTotalRecords).reversed())
                 .toList();
     }
 

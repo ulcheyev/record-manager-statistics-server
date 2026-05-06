@@ -9,6 +9,6 @@ import lombok.Value;
 @Builder
 public class RecordsQueryParams {
     StatisticsInterval interval;
-    String             formTemplateFilter;
-    RecordPhase        phaseFilter;
+    String formTemplateFilter;
+    RecordPhase phaseFilter;
 }

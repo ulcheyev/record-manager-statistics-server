@@ -1,6 +1,6 @@
 package cz.cvut.fel.recordManagerStatisticsServer.repository.impl;
 
-import cz.cvut.fel.recordManagerStatisticsServer.dto.AnswerCounts;
+import cz.cvut.fel.recordManagerStatisticsServer.repository.model.AnswerCounts;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.StatisticsInterval;
 import cz.cvut.fel.recordManagerStatisticsServer.repository.AnswerStatsRepository;
 import cz.cvut.fel.recordManagerStatisticsServer.repository.FormTemplateRepository;
@@ -36,7 +36,13 @@ public class DefaultAnswerStatsRepository implements AnswerStatsRepository {
         return count(Vocabulary.s_p_was_treated_at, interval);
     }
 
+    @Override
+    public Map<URI, AnswerCounts> countByRecord(StatisticsInterval interval) {
+        return count(null, interval);
+    }
+
     private Map<URI, AnswerCounts> count(String groupingPredicate, StatisticsInterval interval) {
+        em.clear();
         List<CorrectAnswer> correctAnswers = formTemplateRepo.findCorrectAnswers();
 
         String sparql = new AnswerCountsQueryBuilder(groupingPredicate, interval, correctAnswers)
@@ -54,15 +60,31 @@ public class DefaultAnswerStatsRepository implements AnswerStatsRepository {
 
     private AnswerCounts toAnswerCounts(Object[] row) {
         final int ENTITY_URI = 0;
-        final int TOTAL_ANSWERS = 1;
-        final int EVALUABLE_ANSWERS = 2;
-        final int CORRECT_ANSWERS = 3;
+        final int EVALUABLE_QUESTIONS = 1;
+        final int INFORMATIVE_QUESTIONS = 2;
+        final int EVALUABLE_ANSWERS = 3;
+        final int INFORMATIVE_ANSWERS = 4;
+        final int CORRECT_ANSWERS = 5;
 
         URI entityUri = (URI) row[ENTITY_URI];
-        long totalAnswers = ((Number) row[TOTAL_ANSWERS]).longValue();
-        long evaluableAnswers = ((Number) row[EVALUABLE_ANSWERS]).longValue();
-        long correctAnswers = ((Number) row[CORRECT_ANSWERS]).longValue();
 
-        return new AnswerCounts(entityUri, totalAnswers, evaluableAnswers, correctAnswers);
+        long evaluableQuestions = number(row[EVALUABLE_QUESTIONS]);
+        long informativeQuestions = number(row[INFORMATIVE_QUESTIONS]);
+        long evaluableAnswers = number(row[EVALUABLE_ANSWERS]);
+        long informativeAnswers = number(row[INFORMATIVE_ANSWERS]);
+        long correctAnswers = number(row[CORRECT_ANSWERS]);
+
+        return new AnswerCounts(
+                entityUri,
+                evaluableQuestions,
+                informativeQuestions,
+                evaluableAnswers,
+                informativeAnswers,
+                correctAnswers
+        );
+    }
+
+    private long number(Object value) {
+        return value == null ? 0 : ((Number) value).longValue();
     }
 }

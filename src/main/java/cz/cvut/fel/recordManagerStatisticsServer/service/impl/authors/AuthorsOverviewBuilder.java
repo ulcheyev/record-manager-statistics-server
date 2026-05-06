@@ -18,6 +18,22 @@ public class AuthorsOverviewBuilder {
 
     private final RequestUserContext userContext;
 
+    private long totalAnswers(AuthorWithInstitutionDto author) {
+        return author.getAnswers() == null ? 0 : author.getAnswers().totalAnswered();
+    }
+
+    private double correctnessRate(AuthorWithInstitutionDto author) {
+        if (author.getAnswers() == null || author.getAnswers().getEvaluable() == null) {
+            return 0.0;
+        }
+
+        long answered = author.getAnswers().getEvaluable().getAnswered();
+        long correct = author.getAnswers().getEvaluable().getCorrect();
+
+        return answered == 0 ? 0.0 : (double) correct / answered * 100;
+    }
+
+
     public AuthorsOverviewDto build(
             List<AuthorWithInstitutionDto> authors,
             StatisticsLabel label,
@@ -31,10 +47,10 @@ public class AuthorsOverviewBuilder {
                 .interval(interval)
                 .totalAuthors(authors.size())
                 .mostRecordsAuthorInfo(Leaderboard.by(authors, AuthorWithInstitutionDto::getTotalRecords, name, "records"))
-                .mostAnswersAuthorInfo(Leaderboard.by(authors, AuthorWithInstitutionDto::getTotalAnswers, name, "answers"))
+                .mostAnswersAuthorInfo(Leaderboard.by(authors, this::totalAnswers, name, "answers"))
                 .bestCompletionRateInfo(Leaderboard.by(authors, AuthorWithInstitutionDto::getCompletionRate, name, "completed records"))
                 .mostRejectionRateInfo(Leaderboard.by(authors, AuthorWithInstitutionDto::getRejectionRate, name, "rejected records"))
-                .bestAnswerCorrectnessInfo(Leaderboard.by(authors, AuthorWithInstitutionDto::getCorrectnessRate, name, "correct answers"))
+                .bestAnswerCorrectnessInfo(Leaderboard.by(authors, this::correctnessRate, name, "correct answers"))
                 .build();
     }
 

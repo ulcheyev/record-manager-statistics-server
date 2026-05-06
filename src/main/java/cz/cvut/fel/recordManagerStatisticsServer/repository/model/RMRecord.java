@@ -9,8 +9,8 @@ import java.util.Date;
 
 @Getter
 @Setter
-@OWLClass(iri = Vocabulary.s_c_record)
-public class RMRecord extends AbstractEntity {
+@OWLClass(iri = Vocabulary.s_c_patient_record)
+public class RMRecord extends AbstractNamedEntity {
 
     @OWLDataProperty(iri = Vocabulary.s_p_key)
     private String key;
@@ -28,7 +28,7 @@ public class RMRecord extends AbstractEntity {
     private String formTemplate;
 
     @Enumerated(EnumType.OBJECT_ONE_OF)
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_phase, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_phase)
     private RecordPhase phase;
 
 }

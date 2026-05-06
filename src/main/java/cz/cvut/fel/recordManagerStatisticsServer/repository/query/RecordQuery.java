@@ -6,11 +6,17 @@ public final class RecordQuery {
      * Fetches record URIs matching the given type and filter.
      */
     public static final String FIND_ALL_WITH_FILTER = """
-                SELECT ?r WHERE {
-                    ?r a <%s> .
+            SELECT ?r WHERE {
+                GRAPH ?r {
+                    ?r a ?recordType .
+                    FILTER(?recordType IN (
+                        <%s>,
+                        <%s>
+                    ))
                     %s
                 }
-            """;
+            }
+         """;
 
     /**
      * Fetches record URIs matching the given author username.

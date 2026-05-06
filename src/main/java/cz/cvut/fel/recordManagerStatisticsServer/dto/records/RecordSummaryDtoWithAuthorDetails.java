@@ -5,7 +5,7 @@ import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @Data
-public class RecordSummaryDtoWithAuthorDetails extends RecordSummaryDtoWithInstitutionDetails {
+public class RecordSummaryDtoWithAuthorDetails extends RecordSummaryDto {
     private String authorFullName;
     private String authorUsername;
 }

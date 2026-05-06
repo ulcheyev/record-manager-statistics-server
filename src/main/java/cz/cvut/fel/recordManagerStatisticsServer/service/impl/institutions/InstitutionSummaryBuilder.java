@@ -1,6 +1,6 @@
 package cz.cvut.fel.recordManagerStatisticsServer.service.impl.institutions;
 
-import cz.cvut.fel.recordManagerStatisticsServer.dto.AnswerCounts;
+import cz.cvut.fel.recordManagerStatisticsServer.repository.model.AnswerCounts;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.PhaseCountDto;
 import cz.cvut.fel.recordManagerStatisticsServer.dto.institutions.InstitutionSummaryDto;
 import cz.cvut.fel.recordManagerStatisticsServer.repository.model.Institution;
@@ -31,11 +31,8 @@ public class InstitutionSummaryBuilder {
                 .authorCount(aggregator.groupByAuthor(records).size())
                 .completionRate(byPhase.completionRate())
                 .rejectionRate(byPhase.rejectionRate())
-                .totalAnswers(answerCounts.totalAnswers())
-                .evaluableAnswers(answerCounts.evaluableAnswers())
-                .totalCorrectAnswers(answerCounts.correctAnswers())
-                .correctnessRate(answerCounts.correctnessRate())
-                .correctnessRate(answerCounts.correctnessRate())
+                .questions(answerCounts.toQuestionsDto())
+                .answers(answerCounts.toAnswersDto())
                 .build();
     }
 }

@@ -12,5 +12,5 @@ public class RecordListDto extends StatisticsWithMetadata {
     private long total;
     private List<RecordSummaryDto> records;
     private PhaseDistributionDto phaseDistribution;
-    private FormTemplateUsageDto formTemplateUsageDto;
+    private FormTemplateUsageDto formTemplateUsage;
 }

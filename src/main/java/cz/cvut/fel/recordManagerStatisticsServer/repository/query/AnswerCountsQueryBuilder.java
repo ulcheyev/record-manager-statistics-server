@@ -13,29 +13,48 @@ import java.util.stream.Collectors;
 public final class AnswerCountsQueryBuilder {
 
     private static final String TEMPLATE = """
-            SELECT ?entity
-                   (COUNT(DISTINCT ?q)           AS ?totalAnswers)
-                   (COUNT(DISTINCT ?evaluableQ)  AS ?evaluableAnswers)
-                   (COUNT(DISTINCT ?correctQ)    AS ?correctAnswers)
-            WHERE {
-                GRAPH ?r {
-                    ?r a <{recordType}> ;
-                       <{groupingPredicate}> ?entity ;
-                       <{phasePredicate}> <{completedPhase}> ;
-                       <{hasQuestion}> ?root .
-                    ?root <{hasRelatedQuestion}> ?q .
-                    ?q <{hasQuestionOrigin}> ?qo ;
-                       <{hasAnswer}> ?ans .
+        SELECT ?entity
+               (COUNT(DISTINCT ?evaluableQ)           AS ?evaluableQuestions)
+               (COUNT(DISTINCT ?informativeQ)         AS ?informativeQuestions)
+               (COUNT(DISTINCT ?answeredEvaluableQ)   AS ?evaluableAnswers)
+               (COUNT(DISTINCT ?answeredInformativeQ) AS ?informativeAnswers)
+               (COUNT(DISTINCT ?correctQ)             AS ?correctAnswers)
+        WHERE {
+            GRAPH ?r {
+                ?r a <{recordType}> ;
+                   <{phasePredicate}> <{completedPhase}> ;
+                   <{hasQuestion}> ?root .
+
+                {entityBinding}
+
+                ?root <{hasRelatedQuestion}>+ ?q .
+                ?q <{hasQuestionOrigin}> ?qo .
+
+                OPTIONAL {
+                    {valuesBlock}
+                    FILTER(?vqo = ?qo)
+                    BIND(?q AS ?evaluableQ)
+                }
+
+                OPTIONAL {
+                    FILTER(!BOUND(?evaluableQ))
+                    BIND(?q AS ?informativeQ)
+                }
+
+                OPTIONAL {
+                    ?q <{hasAnswer}> ?ans .
                     {
                         ?ans <{hasObjectValue}> ?picked .
                     } UNION {
                         ?ans <{hasDataValue}> ?picked .
                         FILTER(STR(?picked) != "")
                     }
+
                     OPTIONAL {
                         {valuesBlock}
                         FILTER(?vqo = ?qo)
-                        BIND(?q AS ?evaluableQ)
+                        BIND(?q AS ?answeredEvaluableQ)
+
                         OPTIONAL {
                             FILTER(
                                 ?picked = ?correctUri
@@ -47,11 +66,26 @@ public final class AnswerCountsQueryBuilder {
                             BIND(?q AS ?correctQ)
                         }
                     }
-                    {intervalFilter}
+
+                    OPTIONAL {
+                        FILTER(!BOUND(?answeredEvaluableQ))
+                        BIND(?q AS ?answeredInformativeQ)
+                    }
                 }
+
+                {intervalFilter}
             }
-            GROUP BY ?entity
-            """;
+        }
+        GROUP BY ?entity
+        """;
+
+    private String entityBinding() {
+        if (groupingPredicate == null || groupingPredicate.isBlank()) {
+            return "BIND(?r AS ?entity)";
+        }
+
+        return "?r <%s> ?entity .".formatted(groupingPredicate);
+    }
 
     private final String groupingPredicate;
     private final StatisticsInterval interval;
@@ -60,8 +94,7 @@ public final class AnswerCountsQueryBuilder {
     public String build() {
         return substitute(Map.ofEntries(
                 Map.entry("valuesBlock", valuesBlock()),
-                Map.entry("recordType", Vocabulary.s_c_record),
-                Map.entry("groupingPredicate", groupingPredicate),
+                Map.entry("recordType", Vocabulary.s_c_patient_record),
                 Map.entry("phasePredicate", Vocabulary.s_p_has_phase),
                 Map.entry("completedPhase", Vocabulary.s_c_completed_record_phase),
                 Map.entry("hasQuestion", Vocabulary.s_p_has_question),
@@ -70,7 +103,9 @@ public final class AnswerCountsQueryBuilder {
                 Map.entry("hasAnswer", Vocabulary.s_p_has_answer),
                 Map.entry("hasObjectValue", Vocabulary.s_p_has_object_value),
                 Map.entry("hasDataValue", Vocabulary.s_p_has_data_value),
-                Map.entry("intervalFilter", QueryBuilder.intervalFilter(interval))));
+                Map.entry("intervalFilter", QueryBuilder.intervalFilter(interval)),
+                Map.entry("entityBinding", entityBinding())
+        ));
     }
 
     private String valuesBlock() {
