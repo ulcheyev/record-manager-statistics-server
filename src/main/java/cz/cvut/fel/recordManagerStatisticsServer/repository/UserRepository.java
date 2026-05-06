@@ -1,5 +1,10 @@
 package cz.cvut.fel.recordManagerStatisticsServer.repository;
 
 
-public interface UserRepository extends Repository<cz.cvut.fel.recordManagerStatisticsServer.model.RMUser> {
+import cz.cvut.fel.recordManagerStatisticsServer.repository.model.RMUser;
+
+import java.util.Optional;
+
+public interface UserRepository extends Repository<RMUser> {
+    Optional<RMUser> findByUsername(String username);
 }

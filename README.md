@@ -1,4 +1,4 @@
-# # Record Manager Statistics Server
+# Record Manager Statistics Server
 
 Backend statistics service for the [Record Manager](https://github.com/kbss-cvut/record-manager) ecosystem.
 Exposes a REST API for aggregated statistics over RDF data stored in GraphDB.

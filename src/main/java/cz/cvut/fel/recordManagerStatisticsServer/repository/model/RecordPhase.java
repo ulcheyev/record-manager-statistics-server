@@ -4,6 +4,8 @@ import cz.cvut.fel.recordManagerStatisticsServer.repository.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.Individual;
 import lombok.Getter;
 
+import java.net.URI;
+
 @Getter
 public enum RecordPhase {
 
@@ -21,5 +23,14 @@ public enum RecordPhase {
 
     RecordPhase(String iri) {
         this.iri = iri;
+    }
+
+    public static RecordPhase fromIri(URI iri) {
+        for (RecordPhase phase : values()) {
+            if (phase.getIri().equals(iri.toString())) {
+                return phase;
+            }
+        }
+        throw new IllegalArgumentException("Unknown RecordPhase IRI: " + iri);
     }
 }

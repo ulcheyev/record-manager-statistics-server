@@ -24,6 +24,7 @@ public abstract class AbstractRepository<T extends AbstractEntity>
     @Override
     public List<T> findAll() {
         log.debug("Finding all {}", type.getSimpleName());
+        em.clear();
         List<T> results = em.createNativeQuery(BaseQuery.FIND_ALL, type)
                 .setParameter("type", resolveTypeUri())
                 .getResultList();
